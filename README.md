@@ -1,2 +1,5 @@
 # ScoutingApp 2018 V2
-### ! IN PROGRESS !
+
+A small WPF app for scouting FIRST FRC matches
+
+Currently in progress
