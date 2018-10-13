@@ -7,6 +7,7 @@ namespace MVVM.ViewModel {
 		string EventLabel { get; }
 		string MatchNumberLabel { get; }
 		string TeamNumberLabel { get; }
+		string Time { get; }
 		ImageSource TimerImageSource { get; }
 	}
 }

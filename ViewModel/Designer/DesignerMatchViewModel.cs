@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Command;
+using System;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -54,6 +55,16 @@ namespace MVVM.ViewModel {
 				RaisePropertyChanged("TeamNumberLabel");
 			}
 		}
+		private string _Time;
+		public string Time {
+			get {
+				return _Time;
+			}
+			set {
+				_Time = value;
+				RaisePropertyChanged("Time");
+			}
+		}
 		private ImageSource _TimerImageSource;
 		public ImageSource TimerImageSource {
 			get {
@@ -71,6 +82,7 @@ namespace MVVM.ViewModel {
 			EventLabel = "Practice";
 			MatchNumberLabel = string.Format("Match {0}", 1);
 			TeamNumberLabel = string.Format("Team {0}", 2512);
+			Time = "1:23";
 			TimerImageSource = new BitmapImage(new Uri("pack://application:,,,/MVVM;component/ok-hand.jpg"));
 		}
 	}

@@ -1,11 +1,23 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using System;
-using System.Media;
+using System.Diagnostics;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace MVVM.ViewModel {
 	public class MatchViewModel : ViewModelBase, IMatchViewModel {
+		private Stopwatch _Stopwatch;
+		private DispatcherTimer _DispatcherTimer;
+
+		private TimeSpan _MatchLength = new TimeSpan(0, 2, 15);
+		private TimeSpan _TimeRemaining {
+			get {
+				return _Stopwatch.Elapsed < _MatchLength ? _MatchLength - _Stopwatch.Elapsed : TimeSpan.Zero;
+			}
+		}
+
 		private string _RecorderIDLabel;
 		public string RecorderIDLabel {
 			get {
@@ -56,6 +68,16 @@ namespace MVVM.ViewModel {
 				RaisePropertyChanged("TeamNumberLabel");
 			}
 		}
+		private string _Time;
+		public string Time {
+			get {
+				return _Time;
+			}
+			set {
+				_Time = value;
+				RaisePropertyChanged("Time");
+			}
+		}
 		private ImageSource _TimerImageSource;
 		public ImageSource TimerImageSource {
 			get {
@@ -68,7 +90,11 @@ namespace MVVM.ViewModel {
 		}
 
 		public MatchViewModel() {
+			_Stopwatch = new Stopwatch();
+			_DispatcherTimer = new DispatcherTimer();
+
 			TimerImageSource = new BitmapImage(new Uri("pack://application:,,,/MVVM;component/ok-hand.jpg"));
+
 			Messenger.Default.Send(new Message.RetrieveDataMessage<Model.MatchInfo>() {
 				SetData = (Model.MatchInfo matchInfo) => {
 					RecorderIDLabel = matchInfo.RecorderID;
@@ -76,8 +102,25 @@ namespace MVVM.ViewModel {
 					EventLabel = matchInfo.Event;
 					MatchNumberLabel = string.Format("Match {0}", matchInfo.MatchNumber);
 					TeamNumberLabel = string.Format("Team {0}", matchInfo.TeamNumber);
+					StartTimers();
 				}
 			});
+
+
+		}
+
+		void StartTimers() {
+			_Stopwatch = new Stopwatch();
+			_DispatcherTimer = new DispatcherTimer() {
+				Interval = new TimeSpan(0, 0, 0, 0, 1),
+			};
+			_DispatcherTimer.Tick += DispatcherTimerTick;
+			_Stopwatch.Start();
+			_DispatcherTimer.Start();
+		}
+
+		void DispatcherTimerTick(object sender, EventArgs e) {
+			Time = string.Format("{0:m\\:ss}", _TimeRemaining);
 		}
 	}
 }
