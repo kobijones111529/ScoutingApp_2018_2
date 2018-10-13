@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="MVVM.View.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MVVM.View"
+			 xmlns:vm="clr-namespace:MVVM.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="1440" d:DesignWidth="2160"
+			 d:DataContext="{Binding Source={StaticResource Locator}, Path=ViewModel}">
+	<UserControl.Resources>
+		<vm:HomeViewModelLocator x:Key="Locator"/>
+	</UserControl.Resources>
+	<UserControl.DataContext>
+		<Binding Source="{StaticResource Locator}" Path="ViewModel"/>
+	</UserControl.DataContext>
+	<Grid Background="{StaticResource BaseBrush}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid Grid.Column="0" Background="{StaticResource BaseBrushDark1}">
+			<StackPanel>
+				<Button Padding="40, 32" Margin="0, 0, 0, 32" BorderThickness="0" FontSize="36" Command="{Binding NavigateMatchInfoCommand}">Scouting</Button>
+				<Button Padding="40, 32" Margin="0, 0, 0, 32" BorderThickness="0" FontSize="36" Command="{Binding NavigateDataCommand}">Data</Button>
+			</StackPanel>
+		</Grid>
+		<Grid Grid.Column="1">
+			<Image Source="{Binding ImageSource}" Stretch="Fill"></Image>
+		</Grid>
+	</Grid>
+</UserControl>

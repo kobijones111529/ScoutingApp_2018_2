@@ -1,0 +1,16 @@
+﻿<Application x:Class="MVVM.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:MVVM"
+			 xmlns:vm="clr-namespace:MVVM.ViewModel"
+             StartupUri="View/MainWindow.xaml">
+	<Application.Resources>
+		<ResourceDictionary>
+			<BitmapImage x:Key="Image" UriSource="image.jpeg"/>
+			<BitmapImage x:Key="DeepFried" UriSource="deepfried.png"/>
+			<SolidColorBrush x:Key="BaseBrushDark1" Color="#171717"/>
+			<SolidColorBrush x:Key="BaseBrush" Color="#1F1F1F"/>
+			<SolidColorBrush x:Key="AccentBrush" Color="#AF3F3F"/>
+		</ResourceDictionary>
+	</Application.Resources>
+</Application>

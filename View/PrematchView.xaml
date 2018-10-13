@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="MVVM.View.PrematchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MVVM.View"
+			 xmlns:vm="clr-namespace:MVVM.ViewModel"
+			 xmlns:behavior="clr-namespace:MVVM.Behavior"
+             mc:Ignorable="d" 
+             d:DesignHeight="768" d:DesignWidth="1024"
+			 d:DataContext="{Binding Source={StaticResource Locator}, Path=ViewModel}">
+	<UserControl.Resources>
+		<vm:PrematchViewModelLocator x:Key="Locator"/>
+	</UserControl.Resources>
+	<UserControl.DataContext>
+		<Binding Source="{StaticResource Locator}" Path="ViewModel"/>
+	</UserControl.DataContext>
+	<Grid Background="{StaticResource BaseBrush}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid Grid.Column="0" Background="{StaticResource BaseBrushDark1}">
+			<StackPanel>
+				<Button Padding="20" FontSize="24" Command="{Binding NavigateHomeCommand}">Home</Button>
+				<Button Padding="20" FontSize="24" Command="{Binding NavigateBackCommand}">Back</Button>
+			</StackPanel>
+		</Grid>
+		<Grid Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="3*"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<ScrollViewer Grid.Row="0">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition/>
+						<ColumnDefinition Width="4*"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<StackPanel Grid.Column="1" Margin="0, 40">
+						<StackPanel TextBlock.Foreground="White" TextBlock.FontSize="24">
+							<TextBlock Margin="0, 0, 0, 12" Text="{Binding RecorderIDLabel}"/>
+							<TextBlock Margin="0, 0, 0, 12" Text="{Binding AllianceLabel}"/>
+							<TextBlock Margin="0, 0, 0, 12" Text="{Binding EventLabel}"/>
+							<TextBlock Margin="0, 0, 0, 12" Text="{Binding MatchNumberLabel}"/>
+							<TextBlock Margin="0, 0, 0, 40" Text="{Binding TeamNumberLabel}"/>
+						</StackPanel>
+						<TextBlock Foreground="White" FontSize="24" Text="Prematch Notes"/>
+						<TextBox FontSize="24" Text="{Binding PrematchNotes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" MinLines="3" MaxLength="255"/>
+						<TextBlock Foreground="White" FontSize="{Binding LossFontSize}" Text="{Binding IsThisLoss}"/>
+					</StackPanel>
+				</Grid>
+			</ScrollViewer>
+			<Grid Grid.Row="1">
+				<Border BorderThickness="0, 2, 0, 0" BorderBrush="White">
+					<Button Margin="200, 40" FontSize="36" Command="{Binding StartMatchCommand}">Start Match</Button>
+				</Border>
+			</Grid>
+		</Grid>
+	</Grid>
+</UserControl>

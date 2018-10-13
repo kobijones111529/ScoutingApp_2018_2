@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="MVVM.View.MatchInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MVVM.View"
+			 xmlns:vm="clr-namespace:MVVM.ViewModel"
+			 xmlns:behavior="clr-namespace:MVVM.Behavior"
+             mc:Ignorable="d" 
+             d:DesignHeight="768" d:DesignWidth="1024"
+			 d:DataContext="{Binding Source={StaticResource Locator}, Path=ViewModel}">
+	<UserControl.Resources>
+		<vm:MatchInfoViewModelLocator x:Key="Locator"/>
+	</UserControl.Resources>
+	<UserControl.DataContext>
+		<Binding Source="{StaticResource Locator}" Path="ViewModel"/>
+	</UserControl.DataContext>
+	<Grid Background="{StaticResource BaseBrush}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid Grid.Column="0" Background="{StaticResource BaseBrushDark1}">
+			<StackPanel>
+				<Button Padding="40, 32" FontSize="36" Command="{Binding NavigateHomeCommand}">Home</Button>
+			</StackPanel>
+		</Grid>
+		<Grid Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="3*"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<ScrollViewer Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition/>
+						<ColumnDefinition Width="4*"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<StackPanel Grid.Column="1" Margin="0, 40">
+						<StackPanel.Resources>
+							<Style TargetType="TextBlock">
+								<Setter Property="Foreground" Value="White"/>
+								<Setter Property="FontSize" Value="24"/>
+							</Style>
+							<Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+								<Setter Property="Foreground" Value="Black"/>
+								<Setter Property="FontSize" Value="24"/>
+								<Setter Property="ItemTemplate">
+									<Setter.Value>
+										<DataTemplate>
+											<TextBlock Foreground="Black" FontSize="24" Text="{Binding}"/>
+										</DataTemplate>
+									</Setter.Value>
+								</Setter>
+							</Style>
+							<Style TargetType="TextBox">
+								<Setter Property="Foreground" Value="Black"/>
+								<Setter Property="FontSize" Value="24"/>
+							</Style>
+						</StackPanel.Resources>
+						<StackPanel Margin="0, 0, 0, 20" Orientation="Horizontal" Visibility="Collapsed">
+							<TextBlock Margin="0, 4, 20, 0" Foreground="Black" FontSize="24">&#xE7BA;</TextBlock>
+							<TextBlock Foreground="#AAAA39" FontSize="24"/>
+						</StackPanel>
+						<StackPanel>
+							<TextBlock Foreground="White" FontSize="24">Recorder ID</TextBlock>
+							<ComboBox Margin="0, 0, 0, 40" ItemsSource="{Binding RecorderIDSource}" SelectedItem="{Binding SelectedRecorderID, Mode=TwoWay}"/>
+						</StackPanel>
+						<StackPanel>
+							<TextBlock Foreground="White" FontSize="24">Alliance</TextBlock>
+							<ComboBox Margin="0, 0, 0, 40" ItemsSource="{Binding AllianceSource}" SelectedItem="{Binding SelectedAlliance, Mode=TwoWay}"/>
+						</StackPanel>
+						<StackPanel>
+							<TextBlock Foreground="White" FontSize="24">Event</TextBlock>
+							<ComboBox Margin="0, 0, 0, 40" IsEditable="True" ItemsSource="{Binding EventSource}" SelectedItem="{Binding SelectedEvent, Mode=TwoWay}" Text="{Binding SelectedEvent, Mode=TwoWay}"/>
+						</StackPanel>
+						<StackPanel>
+							<TextBlock Foreground="White" FontSize="24">Match Number</TextBlock>
+							<TextBox Margin="0, 0, 0, 40" Text="{Binding MatchNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" behavior:TextBoxFilter.IsNumeric="True"/>
+						</StackPanel>
+						<StackPanel>
+							<TextBlock Foreground="White" FontSize="24">Team Number</TextBlock>
+							<TextBox Margin="0, 0, 0, 50" Text="{Binding TeamNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" behavior:TextBoxFilter.IsNumeric="True"/>
+						</StackPanel>
+					</StackPanel>
+				</Grid>
+			</ScrollViewer>
+			<Grid Grid.Row="1">
+				<Border BorderThickness="0, 2, 0, 0" BorderBrush="White">
+					<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200, 40" FontSize="36" Command="{Binding SubmitCommand}">Submit</Button>
+				</Border>
+			</Grid>
+		</Grid>
+	</Grid>
+</UserControl>
