@@ -15,18 +15,39 @@
 		<Binding Source="{StaticResource Locator}" Path="ViewModel"/>
 	</UserControl.DataContext>
 	<Grid Background="{StaticResource BaseBrush}">
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition/>
-		</Grid.ColumnDefinitions>
-		<Grid Grid.Column="0" Background="{StaticResource BaseBrushDark1}">
-			<StackPanel>
-				<Button Padding="40, 32" Margin="0, 0, 0, 32" BorderThickness="0" FontSize="36" Command="{Binding NavigateMatchInfoCommand}">Scouting</Button>
-				<Button Padding="40, 32" Margin="0, 0, 0, 32" BorderThickness="0" FontSize="36" Command="{Binding NavigateDataCommand}">Data</Button>
-			</StackPanel>
+		<Grid>
+			<Image Source="{StaticResource Background1}" Stretch="UniformToFill" Visibility="Collapsed"/>
 		</Grid>
-		<Grid Grid.Column="1">
-			<Image Source="{Binding ImageSource}" Stretch="Fill"></Image>
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+			<Grid Grid.Column="1">
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<Grid Grid.Row="0">
+					<Button Style="{StaticResource HomeButtonStyle}" Margin="0, 0, 0, 0" FontSize="108" Command="{Binding NavigateMatchInfoCommand}">Scouting</Button>
+				</Grid>
+				<Grid Grid.Row="1">
+					<Button Style="{StaticResource HomeButtonStyle}" Margin="0, 0, 0, 0" FontSize="108" Command="{Binding NavigateDataCommand}">Data</Button>
+				</Grid>
+			</Grid>
+			<Grid Grid.Column="0">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="10*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" TextBlock.Foreground="White" TextBlock.FontFamily="{StaticResource Nikoleta}">
+						<TextBlock Margin="0, 0, 0, -12" FontWeight="UltraLight" FontSize="64" Text="Duluth East"/>
+						<TextBlock FontSize="144" Text="Daredevils"/>
+					</StackPanel>
+				</Grid>
+				<Image Source="{Binding ImageSource}" Stretch="Fill" Visibility="Collapsed"/>
+			</Grid>
 		</Grid>
 	</Grid>
 </UserControl>

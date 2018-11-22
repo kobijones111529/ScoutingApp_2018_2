@@ -1,7 +1,12 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using MVVM.Message;
+using MVVM.Model;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -10,8 +15,9 @@ namespace MVVM.ViewModel {
 	public class MatchViewModel : ViewModelBase, IMatchViewModel {
 		private Stopwatch _Stopwatch;
 		private DispatcherTimer _DispatcherTimer;
+		private List<MatchEvent> _Events = new List<Model.MatchEvent>();
 
-		private TimeSpan _MatchLength = new TimeSpan(0, 2, 15);
+		private TimeSpan _MatchLength = new TimeSpan(0, 0, 5);
 		private TimeSpan _TimeRemaining {
 			get {
 				return _Stopwatch.Elapsed < _MatchLength ? _MatchLength - _Stopwatch.Elapsed : TimeSpan.Zero;
@@ -78,6 +84,36 @@ namespace MVVM.ViewModel {
 				RaisePropertyChanged("Time");
 			}
 		}
+		private string _LastEvent;
+		public string LastEvent {
+			get {
+				return _LastEvent;
+			}
+			set {
+				_LastEvent = value;
+				RaisePropertyChanged("LastEvent");
+			}
+		}
+		private string _LastEventStage;
+		public string LastEventStage {
+			get {
+				return _LastEventStage;
+			}
+			set {
+				_LastEventStage = value;
+				RaisePropertyChanged("LastEventStage");
+			}
+		}
+		private string _LastEventTime;
+		public string LastEventTime {
+			get {
+				return _LastEventTime;
+			}
+			set {
+				_LastEventTime = value;
+				RaisePropertyChanged("LastEventTime");
+			}
+		}
 		private ImageSource _TimerImageSource;
 		public ImageSource TimerImageSource {
 			get {
@@ -88,14 +124,50 @@ namespace MVVM.ViewModel {
 				RaisePropertyChanged("TimerImageSource");
 			}
 		}
+		private Visibility _AbortButtonVisibility;
+		public Visibility AbortButtonVisibility {
+			get {
+				return _AbortButtonVisibility;
+			}
+			set {
+				_AbortButtonVisibility = value;
+				RaisePropertyChanged("AbortButtonVisibility");
+			}
+		}
+		private Visibility _ContinueButtonVisibility;
+		public Visibility ContinueButtonVisibility {
+			get {
+				return _ContinueButtonVisibility;
+			}
+			set {
+				_ContinueButtonVisibility = value;
+				RaisePropertyChanged("ContinueButtonVisibility");
+			}
+		}
+
+		public RelayCommand AbortCommand { get; private set; }
+		public RelayCommand ContinueCommand { get; private set; }
+		public RelayCommand UndoCommand { get; private set; }
+		public RelayCommand CrossBaselineCommand { get; private set; }
 
 		public MatchViewModel() {
-			_Stopwatch = new Stopwatch();
-			_DispatcherTimer = new DispatcherTimer();
+			LastEvent = "No Events";
+			LastEventStage = null;
+			LastEventTime = null;
+			TimerImageSource = new BitmapImage(new Uri("pack://application:,,,/MVVM;component/Resources/Images/ok-hand-deepfried.png"));
+			AbortButtonVisibility = Visibility.Visible;
+			ContinueButtonVisibility = Visibility.Collapsed;
 
-			TimerImageSource = new BitmapImage(new Uri("pack://application:,,,/MVVM;component/ok-hand.jpg"));
+			AbortCommand = new RelayCommand(Abort);
+			AbortCommand.RaiseCanExecuteChanged();
+			ContinueCommand = new RelayCommand(Continue);
+			ContinueCommand.RaiseCanExecuteChanged();
+			UndoCommand = new RelayCommand(Undo, CanUndo);
+			UndoCommand.RaiseCanExecuteChanged();
+			CrossBaselineCommand = new RelayCommand(CrossBaseline);
+			CrossBaselineCommand.RaiseCanExecuteChanged();
 
-			Messenger.Default.Send(new Message.RetrieveDataMessage<Model.MatchInfo>() {
+			Messenger.Default.Send(new RetrieveDataMessage<MatchInfo>() {
 				SetData = (Model.MatchInfo matchInfo) => {
 					RecorderIDLabel = matchInfo.RecorderID;
 					AllianceLabel = matchInfo.Alliance;
@@ -105,22 +177,97 @@ namespace MVVM.ViewModel {
 					StartTimers();
 				}
 			});
-
-
 		}
 
-		void StartTimers() {
+		private void SetMatchData(MatchData matchData) {
+			matchData.Events = _Events;
+		}
+
+		private void Abort() {
+			Messenger.Default.Send(new NavigateMessage() {
+				Type = typeof(PrematchViewModelType)
+			});
+		}
+		private void Continue() {
+			Messenger.Default.Send(new SendDataMessage<MatchData>() {
+				SetData = SetMatchData
+			});
+			Messenger.Default.Send(new NavigateMessage() {
+				Type = typeof(PostmatchViewModelType)
+			});
+		}
+		private void Undo() {
+			UndoEvent();
+		}
+		private bool CanUndo() {
+			return _Events.Any();
+		}
+		private void CrossBaseline() {
+			AddEvent(new MatchEvent() {
+				Type = MatchEvent.EventType.CrossBaseline,
+				Stage = MatchEvent.EventStage.Autonomous,
+				Time = _TimeRemaining
+			});
+		}
+
+		private void StartTimers() {
 			_Stopwatch = new Stopwatch();
 			_DispatcherTimer = new DispatcherTimer() {
-				Interval = new TimeSpan(0, 0, 0, 0, 1),
+				Interval = TimeSpan.FromMilliseconds(1)
 			};
-			_DispatcherTimer.Tick += DispatcherTimerTick;
+			_DispatcherTimer.Tick += DispatcherTimer_Tick;
 			_Stopwatch.Start();
 			_DispatcherTimer.Start();
 		}
+		private void DispatcherTimer_Tick(object sender, EventArgs e) {
+			Time = string.Format("{0:m\\:ss}", FormattedTimeSpan(_TimeRemaining));
+			if(_Stopwatch.Elapsed > _MatchLength) {
+				AbortButtonVisibility = Visibility.Collapsed;
+				ContinueButtonVisibility = Visibility.Visible;
+			}
+		}
 
-		void DispatcherTimerTick(object sender, EventArgs e) {
-			Time = string.Format("{0:m\\:ss}", _TimeRemaining);
+		private void AddEvent(MatchEvent matchEvent) {
+			_Events.Insert(0, matchEvent);
+			UpdateLastEvent();
+			UndoCommand.RaiseCanExecuteChanged();
+		}
+		private void UndoEvent() {
+			_Events.RemoveAt(0);
+			UpdateLastEvent();
+			UndoCommand.RaiseCanExecuteChanged();
+		}
+		private void UpdateLastEvent() {
+			if(_Events.Any()) {
+				LastEvent = Enum.GetDescription(_Events[0].Type);
+				if(DuplicateEventCount > 1) {
+					LastEvent += " x";
+					LastEvent += DuplicateEventCount;
+				}
+				LastEventStage = _Events[0].Stage.ToString();
+				LastEventTime = string.Format("{0:m\\:ss}", FormattedTimeSpan(_Events[0].Time));
+			} else {
+				LastEvent = "No Events";
+				LastEventStage = null;
+				LastEventTime = null;
+			}
+		}
+
+		private TimeSpan FormattedTimeSpan(TimeSpan time) {
+			return TimeSpan.FromSeconds(Math.Ceiling(time.TotalSeconds));
+		}
+
+		private int DuplicateEventCount {
+			get {
+				int count = 0;
+				for(int i = 0; i < _Events.Count; i++, count++) {
+					if(_Events[i].Type != _Events[0].Type)
+						break;
+					else if(_Events[i].Stage != _Events[0].Stage)
+						break;
+				}
+				return count;
+			}
 		}
 	}
 }

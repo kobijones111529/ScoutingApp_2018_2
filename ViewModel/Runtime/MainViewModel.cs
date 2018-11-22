@@ -1,24 +1,27 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
+using MVVM.Message;
+using MVVM.Model;
+using System;
 using System.Collections.ObjectModel;
 
 namespace MVVM.ViewModel {
 	public class MainViewModel : ViewModelBase, IMainViewModel {
-		private Model.MatchInfoSource MatchInfoSource;
-		private Model.MatchInfo MatchInfo;
+		private MatchInfoSource MatchInfoSource;
+		private MatchInfo MatchInfo;
 
-		private IViewModelType _CurrentViewModelType;
-		public IViewModelType CurrentViewModelType {
+		private IViewModelType _CurrentViewModel;
+		public IViewModelType CurrentViewModel {
 			get {
-				return _CurrentViewModelType;
+				return _CurrentViewModel;
 			}
 			set {
-				_CurrentViewModelType = value;
-				RaisePropertyChanged("CurrentViewModelType");
+				_CurrentViewModel = value;
+				RaisePropertyChanged("CurrentViewModel");
 			}
 		}
 
 		public MainViewModel() {
-			MatchInfoSource = new Model.MatchInfoSource() {
+			MatchInfoSource = new MatchInfoSource() {
 				RecorderIDSource = new ObservableCollection<string>() {
 					"Person 1",
 					"Person 2"
@@ -35,7 +38,7 @@ namespace MVVM.ViewModel {
 					"Practice"
 				}
 			};
-			MatchInfo = new Model.MatchInfo() {
+			MatchInfo = new MatchInfo() {
 				RecorderID = MatchInfoSource.RecorderIDSource[0],
 				Alliance = MatchInfoSource.AllianceSource[0],
 				Event = MatchInfoSource.EventSource[0],
@@ -43,22 +46,22 @@ namespace MVVM.ViewModel {
 				TeamNumber = 2512
 			};
 
-			Messenger.Default.Register<Message.NavigateMessage>(this, Navigate);
-			Messenger.Default.Register<Message.RetrieveDataMessage<Model.MatchInfoSource>>(this, (msg) => {
+			Messenger.Default.Register<NavigateMessage>(this, Navigate);
+			Messenger.Default.Register<RetrieveDataMessage<MatchInfoSource>>(this, (msg) => {
 				msg.SetData(MatchInfoSource);
 			});
-			Messenger.Default.Register<Message.RetrieveDataMessage<Model.MatchInfo>>(this, (msg) => {
+			Messenger.Default.Register<RetrieveDataMessage<MatchInfo>>(this, (msg) => {
 				msg.SetData(MatchInfo);
 			});
-			Messenger.Default.Register<Message.SendDataMessage<Model.MatchInfo>>(this, (msg) => {
-				msg.SetData(ref MatchInfo);
+			Messenger.Default.Register<SendDataMessage<MatchInfo>>(this, (msg) => {
+				msg.SetData(MatchInfo);
 			});
 
-			CurrentViewModelType = new HomeViewModelType();
+			CurrentViewModel = (IViewModelType)Activator.CreateInstance(typeof(HomeViewModelType));
 		}
 
 		private void Navigate(Message.NavigateMessage msg) {
-			CurrentViewModelType = msg.Type;
+			CurrentViewModel = (IViewModelType)Activator.CreateInstance(msg.Type);
 		}
 	}
 }

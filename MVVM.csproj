@@ -73,6 +73,12 @@
     </ApplicationDefinition>
     <Compile Include="Behavior\TextBoxFilter.cs" />
     <Compile Include="Command\CommandBase.cs" />
+    <Compile Include="CustomControls\DelayButton.xaml.cs">
+      <DependentUpon>DelayButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Enum.cs" />
+    <Compile Include="Model\MatchData.cs" />
+    <Compile Include="Model\MatchEvent.cs" />
     <Compile Include="Model\MatchInfoSource.cs" />
     <Compile Include="Message\NavigateMessage.cs" />
     <Compile Include="Message\RetrieveDataMessage.cs" />
@@ -84,17 +90,23 @@
     <Compile Include="ViewModel\Designer\DesignerMainViewModel.cs" />
     <Compile Include="ViewModel\Designer\DesignerMatchInfoViewModel.cs" />
     <Compile Include="ViewModel\Designer\DesignerMatchViewModel.cs" />
+    <Compile Include="ViewModel\Designer\DesignerPostmatchViewModel.cs" />
     <Compile Include="ViewModel\Designer\DesignerPrematchViewModel.cs" />
     <Compile Include="ViewModel\IMatchViewModel.cs" />
+    <Compile Include="ViewModel\IPostmatchViewModel.cs" />
     <Compile Include="ViewModel\IPrematchViewModel.cs" />
     <Compile Include="ViewModel\Locator\MatchViewModelLocator.cs" />
+    <Compile Include="ViewModel\Locator\PostmatchViewModelLocator.cs" />
     <Compile Include="ViewModel\Locator\PrematchViewModelLocator.cs" />
     <Compile Include="ViewModel\Runtime\HomeViewModel.cs" />
     <Compile Include="ViewModel\IHomeViewModel.cs" />
     <Compile Include="ViewModel\IMainViewModel.cs" />
     <Compile Include="ViewModel\IMatchInfoViewModel.cs" />
     <Compile Include="ViewModel\Runtime\MatchViewModel.cs" />
+    <Compile Include="ViewModel\Runtime\PostmatchViewModel.cs" />
     <Compile Include="ViewModel\Runtime\PrematchViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelType\AbortButtonType.cs" />
+    <Compile Include="ViewModel\ViewModelType\ContinueButtonType.cs" />
     <Compile Include="ViewModel\ViewModelType\IViewModelType.cs" />
     <Compile Include="ViewModel\Locator\HomeViewModelLocator.cs" />
     <Compile Include="ViewModel\Locator\MainViewModelLocator.cs" />
@@ -102,11 +114,11 @@
     <Compile Include="ViewModel\ViewModelType\HomeViewModelType.cs" />
     <Compile Include="ViewModel\Runtime\MatchInfoViewModel.cs" />
     <Compile Include="ViewModel\Runtime\MainViewModel.cs" />
-    <Compile Include="ViewModel\Runtime\View2ViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\Locator\ViewModelLocator.cs" />
     <Compile Include="ViewModel\ViewModelType\MatchInfoViewModelType.cs" />
     <Compile Include="ViewModel\ViewModelType\MatchViewModelType.cs" />
+    <Compile Include="ViewModel\ViewModelType\PostmatchViewModelType.cs" />
     <Compile Include="ViewModel\ViewModelType\PrematchViewModelType.cs" />
     <Compile Include="View\MatchInfoView.xaml.cs">
       <DependentUpon>MatchInfoView.xaml</DependentUpon>
@@ -114,9 +126,16 @@
     <Compile Include="View\MatchView.xaml.cs">
       <DependentUpon>MatchView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\PostmatchView.xaml.cs">
+      <DependentUpon>PostmatchView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\PrematchView.xaml.cs">
       <DependentUpon>PrematchView.xaml</DependentUpon>
     </Compile>
+    <Page Include="CustomControls\DelayButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -144,6 +163,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\PostmatchView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\PrematchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -167,6 +190,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="Resources\Fonts\NIKOLETA.otf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -178,22 +202,25 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="image.jpeg" />
+    <Resource Include="Resources\Images\image.jpeg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="deepfried.png" />
+    <Resource Include="Resources\Images\deepfried.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Tetris.mp3" />
+    <Resource Include="Resources\Audio\Tetris.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ok-hand-deepfried.png" />
+    <Resource Include="Resources\Images\ok-hand-deepfried.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ok-hand.jpg" />
+    <Resource Include="Resources\Images\ok-hand.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Resource Include="Resources\Images\background_01.jpg" />
+    <Resource Include="Resources\Images\alex_v2.jpg" />
+    <Resource Include="Resources\Images\alex.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

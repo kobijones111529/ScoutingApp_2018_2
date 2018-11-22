@@ -15,7 +15,6 @@ namespace MVVM.ViewModel {
 				RaisePropertyChanged("ImageSource");
 			}
 		}
-
 		private string _ImageSourceString = "../image.jpeg";
 		public string ImageSourceString {
 			get {
@@ -31,13 +30,10 @@ namespace MVVM.ViewModel {
 		public RelayCommand NavigateDataCommand { get; private set; }
 
 		public DesignerHomeViewModel() {
-			ImageSource = new BitmapImage(new Uri("pack://application:,,,/MVVM;component/deepfried.png"));
+			ImageSource = new BitmapImage(new Uri("pack://application:,,,/MVVM;component/Resources/Images/alex_v2.jpg"));
 			Action navigate = delegate { };
-			Func<bool> canNavigate = delegate {
-				return true;
-			};
-			NavigateMatchInfoCommand = new RelayCommand(navigate, canNavigate);
-			NavigateDataCommand = new RelayCommand(navigate, canNavigate);
+			NavigateMatchInfoCommand = new RelayCommand(navigate);
+			NavigateDataCommand = new RelayCommand(navigate);
 		}
 	}
 }

@@ -1,9 +1,8 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using MVVM.Message;
+using MVVM.Model;
 using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows;
 
 namespace MVVM.ViewModel {
 	public class PrematchViewModel : ViewModelBase, IPrematchViewModel {
@@ -93,8 +92,6 @@ namespace MVVM.ViewModel {
 		public RelayCommand NavigateBackCommand { get; private set; }
 		public RelayCommand StartMatchCommand { get; private set; }
 
-		private Message.SendDataMessage<Model.MatchInfo> SendMatchInfoMessage;
-
 		public PrematchViewModel() {
 			NavigateHomeCommand = new RelayCommand(NavigateHome, CanNavigateHome);
 			NavigateBackCommand = new RelayCommand(NavigateBack, CanNavigateBack);
@@ -102,12 +99,6 @@ namespace MVVM.ViewModel {
 			NavigateHomeCommand.RaiseCanExecuteChanged();
 			NavigateBackCommand.RaiseCanExecuteChanged();
 			StartMatchCommand.RaiseCanExecuteChanged();
-
-			SendMatchInfoMessage = new Message.SendDataMessage<Model.MatchInfo>() {
-				SetData = (ref Model.MatchInfo matchInfo) => {
-					matchInfo.PrematchNotes = PrematchNotes;
-				}
-			};
 
 			Messenger.Default.Send(new Message.RetrieveDataMessage<Model.MatchInfo>() {
 				SetData = (Model.MatchInfo matchInfo) => {
@@ -121,28 +112,38 @@ namespace MVVM.ViewModel {
 			});
 		}
 
+		private void SetMatchInfo(MatchInfo matchInfo) {
+			matchInfo.PrematchNotes = PrematchNotes;
+		}
+
 		private void NavigateHome() {
-			Messenger.Default.Send(SendMatchInfoMessage);
-			Messenger.Default.Send(new Message.NavigateMessage() {
-				Type = new HomeViewModelType()
+			Messenger.Default.Send(new SendDataMessage<MatchInfo>() {
+				SetData = SetMatchInfo
+			});
+			Messenger.Default.Send(new NavigateMessage() {
+				Type = typeof(HomeViewModelType)
 			});
 		}
 		private bool CanNavigateHome() {
 			return true;
 		}
 		private void NavigateBack() {
-			Messenger.Default.Send(SendMatchInfoMessage);
-			Messenger.Default.Send(new Message.NavigateMessage() {
-				Type = new MatchInfoViewModelType()
+			Messenger.Default.Send(new SendDataMessage<MatchInfo>() {
+				SetData = SetMatchInfo
+			});
+			Messenger.Default.Send(new NavigateMessage() {
+				Type = typeof(MatchInfoViewModelType)
 			});
 		}
 		private bool CanNavigateBack() {
 			return true;
 		}
 		private void StartMatch() {
-			Messenger.Default.Send(SendMatchInfoMessage);
-			Messenger.Default.Send(new Message.NavigateMessage() {
-				Type = new MatchViewModelType()
+			Messenger.Default.Send(new SendDataMessage<MatchInfo>() {
+				SetData = SetMatchInfo
+			});
+			Messenger.Default.Send(new NavigateMessage() {
+				Type = typeof(MatchViewModelType)
 			});
 		}
 		private bool CanStartMatch() {

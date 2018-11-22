@@ -24,11 +24,14 @@
 		<DataTemplate DataType="{x:Type vm:MatchViewModelType}">
 			<view:MatchView/>
 		</DataTemplate>
+		<DataTemplate DataType="{x:Type vm:PostmatchViewModelType}">
+			<view:PostmatchView/>
+		</DataTemplate>
 	</Window.Resources>
 	<Window.DataContext>
 		<Binding Source="{StaticResource Locator}" Path="ViewModel"/>
 	</Window.DataContext>
 	<Grid>
-		<ContentControl Content="{Binding CurrentViewModelType}"/>
+		<ContentControl Content="{Binding CurrentViewModel}"/>
 	</Grid>
 </Window>

@@ -1,5 +1,7 @@
-﻿namespace MVVM.Message {
+﻿using System;
+
+namespace MVVM.Message {
 	public class NavigateMessage {
-		public ViewModel.IViewModelType Type { get; set; }
+		public Type Type { get; set; }
 	}
 }

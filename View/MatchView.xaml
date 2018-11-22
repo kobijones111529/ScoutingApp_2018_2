@@ -4,7 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MVVM.View"
+			 xmlns:cc="clr-namespace:MVVM.CustomControls"
 			 xmlns:vm="clr-namespace:MVVM.ViewModel"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			 xmlns:command="http://www.galasoft.ch/mvvmlight"
              mc:Ignorable="d" 
              d:DesignHeight="768" d:DesignWidth="1024"
 			 d:DataContext="{Binding Source={StaticResource Locator}, Path=ViewModel}">
@@ -21,40 +24,77 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<Grid Grid.Row="0">
-			<Grid>
-				<Grid.ColumnDefinitions>
+			<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
 					<ColumnDefinition/>
 					<ColumnDefinition Width="Auto"/>
 				</Grid.ColumnDefinitions>
-				<Grid Grid.Column="0" Margin="20">
+			<Grid Grid.Column="0" Margin="20">
 					<StackPanel TextBlock.Foreground="White" TextBlock.FontSize="24">
 						<TextBlock Text="{Binding RecorderIDLabel}"/>
 						<TextBlock Text="{Binding AllianceLabel}"/>
 						<TextBlock Text="{Binding EventLabel}"/>
 					</StackPanel>
 				</Grid>
-				<Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+			<Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
 					<StackPanel Orientation="Horizontal">
-						<Image Source="{Binding TimerImageSource}" Height="100" RenderTransformOrigin="0.5, 0.5">
+						<Image Source="{Binding TimerImageSource}" Height="150" RenderTransformOrigin="0.5, 0.5">
 							<Image.RenderTransform>
 								<ScaleTransform ScaleX="-1" ScaleY="-1"/>
 							</Image.RenderTransform>
 						</Image>
-						<TextBlock Padding="40, 0" Foreground="White" FontSize="72" Text="{Binding Time}"/>
-						<Image Source="{Binding TimerImageSource}" Height="100" RenderTransformOrigin="0.5, 0.5">
+					<TextBlock Padding="40, 0" VerticalAlignment="Center" Foreground="White" FontSize="72" Text="{Binding Time}"/>
+						<Image Source="{Binding TimerImageSource}" Height="150" RenderTransformOrigin="0.5, 0.5">
 							<Image.RenderTransform>
 								<ScaleTransform ScaleX="1" ScaleY="-1"/>
 							</Image.RenderTransform>
 						</Image>
 					</StackPanel>
 				</Grid>
-				<Grid Grid.Column="2" Margin="20">
-					<StackPanel TextBlock.Foreground="White" TextBlock.FontSize="24">
-						<TextBlock Text="{Binding MatchNumberLabel}"/>
-						<TextBlock Text="{Binding TeamNumberLabel}"/>
-					</StackPanel>
+			<Grid Grid.Column="2" Margin="20">
+				<StackPanel TextBlock.Foreground="White" TextBlock.FontSize="24">
+					<TextBlock Text="{Binding MatchNumberLabel}"/>
+					<TextBlock Text="{Binding TeamNumberLabel}"/>
+				</StackPanel>
+			</Grid>
+		</Grid>
+		<Grid Grid.Row="1">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<Grid Grid.Column="0">
+					<Grid.RowDefinitions>
+						<RowDefinition/>
+						<RowDefinition/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+					<Grid>
+						
+					</Grid>
 				</Grid>
+			</Grid>
+		</Grid>
+		<Grid Grid.Row="2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<Grid Grid.Column="0">
+				<Button FontSize="48" Visibility="{Binding AbortButtonVisibility}" Command="{Binding AbortCommand}">Abort</Button>
+				<Button FontSize="48" Visibility="{Binding ContinueButtonVisibility}" Command="{Binding ContinueCommand}">Continue</Button>
+			</Grid>
+			<Grid Grid.Column="1" HorizontalAlignment="Right">
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+					<StackPanel MinWidth="200" VerticalAlignment="Center" Margin="20, 0" TextBlock.Foreground="White" TextBlock.TextAlignment="Center">
+						<TextBlock Margin="0, 0, 0, 4" FontSize="36" Text="{Binding LastEvent}"/>
+						<TextBlock Margin="0, 0, 0, 4" FontSize="28" Text="{Binding LastEventStage}"/>
+						<TextBlock FontSize="24" Text="{Binding LastEventTime}"/>
+					</StackPanel>
+					<Button Margin="20, 12" Padding="60, 40" FontSize="48" Command="{Binding UndoCommand}">Undo</Button>
+				</StackPanel>
 			</Grid>
 		</Grid>
 	</Grid>

@@ -149,14 +149,14 @@ namespace MVVM.ViewModel {
 		private void NavigateHome() {
 			_Navigating = true;
 			Messenger.Default.Send(new Message.NavigateMessage() {
-				Type = new HomeViewModelType()
+				Type = typeof(HomeViewModelType)
 			});
 		}
 
 		private void Submit() {
 			_Navigating = true;
-			Messenger.Default.Send(new Message.SendDataMessage<Model.MatchInfo>() {
-				SetData = (ref MatchInfo matchInfo) => {
+			Messenger.Default.Send(new Message.SendDataMessage<MatchInfo>() {
+				SetData = (MatchInfo matchInfo) => {
 					matchInfo.RecorderID = SelectedRecorderID;
 					matchInfo.Alliance = SelectedAlliance;
 					matchInfo.Event = SelectedEvent;
@@ -165,7 +165,7 @@ namespace MVVM.ViewModel {
 				}
 			});
 			Messenger.Default.Send(new Message.NavigateMessage() {
-				Type = new PrematchViewModelType()
+				Type = typeof(PrematchViewModelType)
 			});
 		}
 	}

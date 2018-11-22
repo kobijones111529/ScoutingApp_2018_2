@@ -24,7 +24,7 @@ namespace MVVM.ViewModel {
 		private bool _CanNavigateData = false;
 
 		public HomeViewModel() {
-			ImageSource = new BitmapImage(new Uri("pack://application:,,,/MVVM;component/deepfried.png"));
+			ImageSource = new BitmapImage(new Uri("pack://application:,,,/MVVM;component/Resources/Images/alex_v2.jpg"));
 			NavigateMatchInfoCommand = new RelayCommand(NavigateMatchInfo, CanNavigateMatchInfo);
 			NavigateDataCommand = new RelayCommand(NavigateData, CanNavigateData);
 			NavigateMatchInfoCommand.RaiseCanExecuteChanged();
@@ -32,9 +32,8 @@ namespace MVVM.ViewModel {
 		}
 
 		private void NavigateMatchInfo() {
-			ImageSource = new BitmapImage(new Uri("C:\\Projects\\MVVM\\MVVM\\image.jpeg"));
 			_CanNavigateMatchInfo = false;
-			Messenger.Default.Send(new Message.NavigateMessage() { Type = new ViewModel.MatchInfoViewModelType() });
+			Messenger.Default.Send(new Message.NavigateMessage() { Type = typeof(MatchInfoViewModelType) });
 		}
 		private bool CanNavigateMatchInfo() {
 			return _CanNavigateMatchInfo;

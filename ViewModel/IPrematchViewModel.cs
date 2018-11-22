@@ -1,5 +1,4 @@
 ﻿using GalaSoft.MvvmLight.Command;
-using System.Windows;
 
 namespace MVVM.ViewModel {
 	public interface IPrematchViewModel {

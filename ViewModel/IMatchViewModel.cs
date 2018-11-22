@@ -1,4 +1,6 @@
-﻿using System.Windows.Media;
+﻿using GalaSoft.MvvmLight.Command;
+using System.Windows;
+using System.Windows.Media;
 
 namespace MVVM.ViewModel {
 	public interface IMatchViewModel {
@@ -8,6 +10,16 @@ namespace MVVM.ViewModel {
 		string MatchNumberLabel { get; }
 		string TeamNumberLabel { get; }
 		string Time { get; }
+		string LastEvent { get; }
+		string LastEventStage { get; }
+		string LastEventTime { get; }
 		ImageSource TimerImageSource { get; }
+		Visibility AbortButtonVisibility { get; }
+		Visibility ContinueButtonVisibility { get; }
+
+		RelayCommand AbortCommand { get; }
+		RelayCommand ContinueCommand { get; }
+		RelayCommand UndoCommand { get; }
+		RelayCommand CrossBaselineCommand { get; }
 	}
 }

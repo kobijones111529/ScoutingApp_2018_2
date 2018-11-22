@@ -1,14 +1,20 @@
-﻿namespace MVVM.ViewModel {
+﻿using System;
+
+namespace MVVM.ViewModel {
 	public class DesignerMainViewModel : ViewModelBase, IMainViewModel {
-		private IViewModelType _CurrentViewModelType;
-		public IViewModelType CurrentViewModelType {
+		private IViewModelType _CurrentViewModel;
+		public IViewModelType CurrentViewModel {
 			get {
-				return _CurrentViewModelType;
+				return _CurrentViewModel;
 			}
 			set {
-				_CurrentViewModelType = value;
-				RaisePropertyChanged("CurrentViewModelType");
+				_CurrentViewModel = value;
+				RaisePropertyChanged("CurrentViewModel");
 			}
+		}
+
+		public DesignerMainViewModel() {
+			CurrentViewModel = (IViewModelType)Activator.CreateInstance(typeof(HomeViewModelType));
 		}
 	}
 }
